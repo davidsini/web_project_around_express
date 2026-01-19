@@ -1,0 +1,29 @@
+{
+  "name": "web_project_around_express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint .",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidsini/web_project_around_express.git"
+  },
+  "author": "Deivid Sans",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidsini/web_project_around_express/issues"
+  },
+  "homepage": "https://github.com/davidsini/web_project_around_express#readme",
+  "devDependencies": {
+    "eslint": "^8.56.0"
+  },
+  "dependencies": {
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.32.0",
+    "express": "^5.2.1"
+  }
+}
