@@ -4,8 +4,8 @@ const fs = require("fs").promises;
 const usersPath = path.join(__dirname, "../data/users.json");
 
 const doesUserExist = async (req, res, next) => {
-  const usersFile = await fs.readFile(usersPath, "utf-8");
-  const users = JSON.parse(usersFile);
+  const data = await fs.readFile(usersPath, "utf-8");
+  const users = JSON.parse(data);
   const user = users.find((item) => item._id === req.params.id);
 
   if (!user) {
