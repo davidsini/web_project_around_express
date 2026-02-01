@@ -27,15 +27,64 @@ module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
 
   Card.findByIdAndDelete(cardId)
-    .then((card) => {
-      if (!card) {
-        return res.status(404).send({ message: "Tarjeta no encontrada" });
-      }
-      res.send({ message: "Tarjeta eliminada exitosamente" });
+    .orFail(() => {
+      const error = new Error("Tarjeta no encontrada");
+      error.statusCode = 404;
+      throw error;
     })
+    .then((card) => res.send({ message: "Tarjeta eliminada exitosamente" }))
     .catch((err) => {
       if (err.name === "CastError") {
         return res.status(400).send({ message: "ID de tarjeta inválido" });
+      }
+      if (err.statusCode === 404) {
+        return res.status(404).send({ message: err.message });
+      }
+      res.status(500).send({ message: "Error en el servidor" });
+    });
+};
+
+module.exports.likeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
+    .orFail(() => {
+      const error = new Error("Tarjeta no encontrada");
+      error.statusCode = 404;
+      throw error;
+    })
+    .then((card) => res.send(card))
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: "ID de tarjeta inválido" });
+      }
+      if (err.statusCode === 404) {
+        return res.status(404).send({ message: err.message });
+      }
+      res.status(500).send({ message: "Error en el servidor" });
+    });
+};
+
+module.exports.dislikeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true },
+  )
+    .orFail(() => {
+      const error = new Error("Tarjeta no encontrada");
+      error.statusCode = 404;
+      throw error;
+    })
+    .then((card) => res.send(card))
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: "ID de tarjeta inválido" });
+      }
+      if (err.statusCode === 404) {
+        return res.status(404).send({ message: err.message });
       }
       res.status(500).send({ message: "Error en el servidor" });
     });
